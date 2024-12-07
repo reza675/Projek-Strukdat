@@ -2,7 +2,7 @@
 #include <iomanip>
 #include <string>
 
-#define kapasitas 100
+#define kapasitas 20
 
 using namespace std;
 
@@ -36,7 +36,7 @@ BinaryTree *tambahProdukTree(BinaryTree *node, const tokoSerba &produk);
 void tambahProdukKeHash(const tokoSerba &produk);
 string formatHarga(int harga);
 void TampilHash();
-// void HapusDariHash(int kodeProduk);
+void HapusDariHash(string kodeProduk);
 // Hash* CariProdukHash(int kodeProduk);
 // void TambahProdukTree(const &produk);
 
@@ -94,14 +94,31 @@ int main () {
                     
         break;
         case 2:
-        system("cls");
+            system("cls");
             cout << "=============================================================\n";
             cout << "|                       Data Produk                         |\n";
             cout << "=============================================================\n\n";
             TampilHash();
             break;
-            case 3:
-        /* code */
+        case 3:
+            system("cls");
+            cout << "=============================================================\n";
+            cout << "|                       Hapus Produk                        |\n";
+            cout << "=============================================================\n\n";
+            if (isEmptyHash()) {
+                cout << "\nProduk masih kosong, tidak ada yang bisa dihapus\n\n";
+            } else {
+                string kodeHapus;
+                cout << "Data Produk yang tersedia:\n\n";
+                TampilHash();
+                
+                cin.ignore();
+                cout << "\nMasukkan Kode Produk yang ingin dihapus: ";
+                getline(cin, kodeHapus);
+                
+                HapusDariHash(kodeHapus);
+            }
+
         break;
             case 4:
         /* code */
@@ -247,3 +264,31 @@ BinaryTree* tambahProdukTree(BinaryTree* node, const tokoSerba& produk) {
     }
     return node;
 }
+
+void HapusDariHash(string kodeProduk) {
+    int index = hashFunction(kodeProduk);
+    hashNode *current = hashTable[index];
+    hashNode *sebelum = NULL;
+
+    //mencari produk memakai kode yg sesuai
+    while (current != NULL && current->hashProduk.kodeProduk != kodeProduk) {
+        sebelum = current;
+        current = current->next;
+    }
+
+    // klo produk ditemuin
+    if (current != NULL) {
+        //klp node yg mau diapus ni yang pertama
+        if (sebelum == NULL) {
+            hashTable[index] = current->next;
+        } else {
+            sebelum->next = current->next;
+        }
+        
+        string namaProduk = current->hashProduk.namaProduk;
+        delete current;
+        cout << "\nProduk " << namaProduk << " dengan kode " << kodeProduk << " berhasil dihapus dari tabel hash\n";
+    } else {
+        cout << "\nProduk dengan kode " << kodeProduk << " tidak ditemukan\n";
+    }
+}   
