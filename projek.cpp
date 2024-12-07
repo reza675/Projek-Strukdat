@@ -1,5 +1,6 @@
 #include <iostream>
 #include <iomanip>
+#include <string>
 
 #define kapasitas 100
 
@@ -33,6 +34,7 @@ int hashFunction(int kodeProduk);
 hashNode *cariKode(string kodeProduk);
 BinaryTree *tambahProdukTree(BinaryTree *node, const tokoSerba &produk);
 void tambahProdukKeHash(const tokoSerba &produk);
+string formatHarga(int harga);
 void TampilHash();
 // void HapusDariHash(int kodeProduk);
 // Hash* CariProdukHash(int kodeProduk);
@@ -181,37 +183,55 @@ void tambahProdukKeHash(const tokoSerba& produk){
     root = tambahProdukTree(root, produk);
     
 }
+string formatHarga(int harga) {
+    string hasil = to_string(harga); // Mengubah angka menjadi string
+    int len = hasil.size();
+    int count = 0;
+    string formatted;
 
-void TampilHash(){
-    if(isEmptyHash()){
+    for (int i = len - 1; i >= 0; i--) {
+        formatted = hasil[i] + formatted;
+        count++;
+        if (count == 3 && i != 0) {
+            formatted = '.' + formatted;
+            count = 0;
+        }
+    }
+
+    return formatted;
+}
+
+
+void TampilHash() {
+    if (isEmptyHash()) {
         cout << "\nProduk masih kosong, silahkan input produk terlebih dahulu\n\n";
     } else {
         int n = 1;
-        cout << "=====================================================================================" << endl;
+        cout << "==============================================================================================" << endl;
         cout << setfill(' ') << setiosflags(std::ios::left);
-        cout << "| No. |" << setw(31) << "Nama Produk" << '|' << setw(20) << "Harga Produk" << '|' << setw(17) << "kode Produk" << '|' << setw(6) << "Index" << '|' << endl;
-        cout << "=====================================================================================" << endl;
+        cout << "| No. |" << setw(31) << "Nama Produk" << '|' << setw(20) << "Harga Produk" << '|' << setw(17) << "Kode Produk" << '|' << setw(6) << "Index" << '|' << setw(8) << "Element" << '|' << endl;
+        cout << "==============================================================================================" << endl;
 
-        
-        for (int i = 0; i < kapasitas; ++i) {
+        for (int i = 0; i < kapasitas; i++) {
             if (hashTable[i] != NULL) {
-                bantu = hashTable[i];  
+                bantu = hashTable[i];
+                int element = 1; // Penomoran elemen pada indeks ini dimulai dari 1
                 while (bantu != NULL) {
                     cout << "| " << setw(3) << n
                          << " | " << setw(29) << bantu->hashProduk.namaProduk
-                         << " | Rp " << setw(15) << bantu->hashProduk.hargaProduk
+                         << " | Rp " << setw(15) << formatHarga(bantu->hashProduk.hargaProduk)
                          << " | " << setw(15) << bantu->hashProduk.kodeProduk
                          << " | " << setw(4) << i
-                         << " |" << endl;
+                         << " | " << setw(6) << element << " |" << endl;
                     bantu = bantu->next; 
-                    n++;
+                    n++; 
+                    element++;
                 }
-                cout << "=====================================================================================\n";
+                cout << "==============================================================================================\n";
             }
         }
     }
 }
-
     
 BinaryTree* tambahProdukTree(BinaryTree* node, const tokoSerba& produk) {
     if (node == NULL) {
@@ -227,6 +247,3 @@ BinaryTree* tambahProdukTree(BinaryTree* node, const tokoSerba& produk) {
     }
     return node;
 }
-
-
-
