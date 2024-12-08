@@ -26,7 +26,7 @@ struct History{
 
 BinaryTree *root = NULL; 
 hashNode *hashTable[kapasitas] = {NULL};
-hashNode *temp, *newNode, *bantu; 
+hashNode *temp, *newNode, *bantu, *bantu2, *hapus; 
 // History* historyTree = NULL;
 
 bool isEmptyHash();
@@ -37,16 +37,13 @@ void tambahProdukKeHash(const tokoSerba &produk);
 string formatHarga(int harga);
 void TampilHash();
 void HapusDariHash(string kodeProduk);
-// Hash* CariProdukHash(int kodeProduk);
-// void TambahProdukTree(const &produk);
-
-
+void pencarianHash();
 
 
 
 int main () {
     char pil,Pilihan;
-    int pilih, jumlahProduk;
+    int pilih,pilih2, jumlahProduk;
     bool cek = false;
     do {
         system("cls");
@@ -120,9 +117,32 @@ int main () {
             }
 
         break;
-            case 4:
-        /* code */
-        break;
+        case 4: 
+                system("cls");
+                cout << "+=========================================+\n";
+                cout << "|         PENCARIAN PRODUK               |\n";
+                cout << "+=========================================+\n";
+                cout << "| [1] Berdasarkan Kode Produk            |\n";
+                cout << "| [2] Berdasarkan Nama Produk            |\n";
+                cout << "| [3] Kembali ke Menu Utama              |\n";
+                cout << "+=========================================+\n";
+                cout << "Pilih Sub-Menu (1-3): ";
+                cin >> pilih2;
+                switch (pilih2) {
+                case 1:
+                    pencarianHash(); // Pencarian berdasarkan kode
+                    break;
+                case 2:
+                    cout << "Fitur belum tersedia.\n";
+                    break;
+                case 3:
+                    // Kembali ke menu utama
+                    break;
+                default:
+                    cout << "Input tidak valid! Silakan coba lagi.\n";
+                }
+                    
+            break;
             case 5:
         /* code */
         break;
@@ -137,14 +157,16 @@ int main () {
         break;
     }
 
-            do {
-                cout << "\nIngin mencoba menu lain? (y/n) : ";
-                cin >> pil; 
-                if (pil != 'y' && pil != 'Y' && pil != 'n' && pil != 'N') {
-                    cout << "Input tidak valid.\n";
-                }
-            } while (pil != 'y' && pil != 'Y' && pil != 'n' && pil != 'N');
-            cout << "\nTerima Kasih telah menggunakan program ini\n";
+            if(pilih2 != 3) {
+                do {
+                    cout << "\nIngin mencoba menu lain? (y/n) : ";
+                    cin >> pil; 
+                    if (pil != 'y' && pil != 'Y' && pil != 'n' && pil != 'N') {
+                        cout << "Input tidak valid.\n";
+                    }
+                } while (pil != 'y' && pil != 'Y' && pil != 'n' && pil != 'N');
+                cout << "\nTerima Kasih telah menggunakan program ini\n";
+            }
         
     } while (pil == 'y' || pil == 'Y');
     
@@ -259,7 +281,6 @@ void TampilHash() {
 BinaryTree* tambahProdukTree(BinaryTree* node, const tokoSerba& produk) {
     if (node == NULL) {
         node = new BinaryTree{produk, NULL, NULL};
-
         return node;
     }
 
@@ -273,28 +294,70 @@ BinaryTree* tambahProdukTree(BinaryTree* node, const tokoSerba& produk) {
 
 void HapusDariHash(string kodeProduk) {
     int index = hashFunction(kodeProduk);
-    hashNode *current = hashTable[index];
+    hapus = hashTable[index];
     hashNode *sebelum = NULL;
 
     //mencari produk memakai kode yg sesuai
-    while (current != NULL && current->hashProduk.kodeProduk != kodeProduk) {
-        sebelum = current;
-        current = current->next;
+    while (hapus != NULL && hapus->hashProduk.kodeProduk != kodeProduk) {
+        sebelum = hapus;
+        hapus = hapus->next;
     }
 
-    // klo produk ditemuin
-    if (current != NULL) {
-        //klp node yg mau diapus ni yang pertama
+    if (hapus != NULL) {
         if (sebelum == NULL) {
-            hashTable[index] = current->next;
+            hashTable[index] = hapus->next;
         } else {
-            sebelum->next = current->next;
+            sebelum->next = hapus->next;
         }
         
-        string namaProduk = current->hashProduk.namaProduk;
-        delete current;
+        string namaProduk = hapus->hashProduk.namaProduk;
+        delete hapus;
         cout << "\nProduk " << namaProduk << " dengan kode " << kodeProduk << " berhasil dihapus dari tabel hash\n";
     } else {
         cout << "\nProduk dengan kode " << kodeProduk << " tidak ditemukan\n";
     }
 }   
+
+void pencarianHash() {
+    system("cls");
+    cout << "=============================================================\n";
+    cout << "|      Pencarian Produk Berdasarkan Kode Produk [Hash]      |\n";
+    cout << "=============================================================\n\n";
+    if (isEmptyHash()) {
+        cout << "\nProduk masih kosong, tidak ada yang bisa dihapus\n\n";
+    } else {
+        string cariKodeProduk;
+        cin.ignore();
+        cout << "Masukkan Kode Produk yang ingin dicari: "; getline(cin, cariKodeProduk);
+        int index = hashFunction(cariKodeProduk);
+        bantu2 = hashTable[index];
+        int element = 1;
+        while (bantu2 != NULL) {
+            if (bantu2->hashProduk.kodeProduk == cariKodeProduk) {
+                cout << "\nData Produk dengan Kode Produk " << cariKodeProduk << " ditemukan:\n";
+                cout << "==============================================================================================" << endl;
+                cout << setfill(' ') << setiosflags(std::ios::left);
+                cout << "| " << setw(31) << "Nama Produk" << "| " << setw(20) << "Harga Produk" << "| " << setw(17) << "Kode Produk" << "| " << setw(6) << "Index" << "| " << setw(8) << "Element" << " |" << endl;
+                cout << "==============================================================================================" << endl;
+                cout << "| " << setw(30) << bantu2->hashProduk.namaProduk
+                     << " | Rp " << setw(16) << formatHarga(bantu2->hashProduk.hargaProduk)
+                     << " | " << setw(16) << bantu2->hashProduk.kodeProduk
+                     << " | " << setw(5) << index
+                     << " | " << setw(8) << element << " |" << endl;
+                cout << "==============================================================================================\n";
+                return;
+            }
+            bantu2 = bantu2->next;
+            element++; 
+        }
+        cout << "\nProduk dengan kode " << cariKodeProduk << " tidak ditemukan\n";
+    }
+}
+
+
+
+
+
+
+
+
