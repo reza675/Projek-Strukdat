@@ -30,7 +30,7 @@ hashNode *temp, *newNode, *bantu;
 // History* historyTree = NULL;
 
 bool isEmptyHash();
-int hashFunction(int kodeProduk);
+int hashFunction(string kodeProduk);
 hashNode *cariKode(string kodeProduk);
 BinaryTree *tambahProdukTree(BinaryTree *node, const tokoSerba &produk);
 void tambahProdukKeHash(const tokoSerba &produk);
