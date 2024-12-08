@@ -185,17 +185,23 @@ void tambahProdukKeHash(const tokoSerba& produk){
     int index = hashFunction(produk.kodeProduk);
     newNode = new hashNode{produk, NULL};
     
+    int element = 1; // Elemen ke-1 jika bucket kosong
+    bantu = hashTable[index];
+    while (bantu != NULL) {
+        bantu = bantu->next;
+        element++;
+    }
+    
     if (hashTable[index] == NULL){
         hashTable[index] = newNode;
-        cout <<"\nProduk " << produk.namaProduk << " Berhasil ditambahkan ke hash table pada indeks ke-[" << index << ']';
     }else{
         bantu = hashTable[index];
         while (bantu->next != NULL){
             bantu = bantu->next;
         }
         bantu->next = newNode;
-        cout <<"\nProduk " << produk.namaProduk << " Berhasil ditambahkan ke hash table pada indeks ke-[" << index << ']';
     }
+    cout <<"\nProduk " << produk.namaProduk << " Berhasil ditambahkan ke hash table pada indeks ke-[" << index << "] dengan elemen ke-[" << element << ']';
     //menyalin data table hash ke binary search tree
     root = tambahProdukTree(root, produk);
     
@@ -232,7 +238,7 @@ void TampilHash() {
         for (int i = 0; i < kapasitas; i++) {
             if (hashTable[i] != NULL) {
                 bantu = hashTable[i];
-                int element = 1; // Penomoran elemen pada indeks ini dimulai dari 1
+                int element = 1;
                 while (bantu != NULL) {
                     cout << "| " << setw(3) << n
                          << " | " << setw(29) << bantu->hashProduk.namaProduk
