@@ -6,6 +6,7 @@
 #define RED     "\033[31m"
 #define GREEN   "\033[32m"
 #define YELLOW  "\033[33m"
+#define CYAN    "\033[36m"
 
 using namespace std;
 
@@ -37,6 +38,8 @@ hashNode *temp, *newNode, *bantu, *bantu2, *hapus;
 History* historyRoot = NULL;
 
 bool isEmptyHash();
+void tampilanBST();
+void tampilanHash();
 int hashFunction(string kodeProduk);
 hashNode *cariKode(string kodeProduk);
 BinaryTree *tambahProdukTree(BinaryTree *node, const tokoSerba &produk);
@@ -105,7 +108,7 @@ int main () {
         case 2:
             system("cls");
             cout << "=============================================================\n";
-            cout << "|                       Data Produk                         |\n";
+            cout << "|                    Tampilan Data Produk                   |\n";
             cout << "=============================================================\n\n";
             TampilHash();
             break;
@@ -115,10 +118,10 @@ int main () {
             cout << "|                       Hapus Produk                        |\n";
             cout << "=============================================================\n\n";
             if (isEmptyHash()) {
-                cout << YELLOW <<"Produk masih kosong, tidak ada yang bisa dihapus\n\n" << RESET;
+                cout << CYAN <<"Produk masih kosong, silahkan input produk terlebih dahulu!\n\n" << RESET;
             } else {
                 string kodeHapus;
-                cout << "Data Produk yang tersedia:\n\n";
+                cout << "Data produk yang tersedia:\n";
                 TampilHash();
                 
                 cin.ignore();
@@ -149,7 +152,7 @@ int main () {
                     cout << "|     Pencarian Produk Berdasarkan Rentang Nama [BST]       |\n";
                     cout << "=============================================================\n\n";
                     if (root == NULL) {
-                        cout << YELLOW << "Produk masih kosong, silahkan input produk terlebih dahulu!\n\n" << RESET;
+                        cout << CYAN << "Produk masih kosong, silahkan input produk terlebih dahulu!\n\n" << RESET;
                     } else {
                         string startName, endName;
                         cout << "Masukkan rentang awal nama produk: ";
@@ -161,7 +164,7 @@ int main () {
                         bool found = false;
                         pencarianBST(root, startName, endName, i, found);  
                         if (!found) {
-                            cout << YELLOW << "\nProduk dengan nama \"" << startName << "\" hingga \"" << endName << "\" tidak ditemukan.\n" << RESET;
+                            cout << CYAN << "\nProduk dengan nama \"" << startName << "\" hingga \"" << endName << "\" tidak ditemukan.\n" << RESET;
                         }
                     }
                     break;
@@ -173,11 +176,12 @@ int main () {
                 }  
             break;
         case 5:
-                    system("cls");
-                        cout << "=============================================================\n";
-                        cout << "|           Pengurutan Data Secara Descending               |\n";
-                        cout << "=============================================================\n\n";
-                    tampilkanProdukDescending(root);
+            system("cls");
+            cout << "=============================================================\n";
+            cout << "|           Pengurutan Data Secara Descending               |\n";
+            cout << "=============================================================\n\n";
+            cout << "Data produk yang diurutkan secara descending:\n";
+            tampilkanProdukDescending(root);
             break;
         case 6:
             system ("cls");
@@ -194,15 +198,30 @@ int main () {
             switch (pilih3) {
             case 1:
                 system("cls");
+                cout << "=============================================================\n";
+                cout << "|                    Riwayat Produk In-Order                |\n";
+                cout << "=============================================================\n\n";
+                tampilanBST();
                 inOrderTraversal(historyRoot);
+                cout << "=================================================================================\n";
                 break;
             case 2:
                 system("cls");
+                cout << "=============================================================\n";
+                cout << "|                   Riwayat Produk Post-Order               |\n";
+                cout << "=============================================================\n\n";
+                tampilanBST();
                 postOrderTraversal(historyRoot);
+                cout << "=================================================================================\n";
                 break;
             case 3:
                 system("cls");
+                cout << "=============================================================\n";
+                cout << "|                   Riwayat Produk Pre-Order                |\n";
+                cout << "=============================================================\n\n";
+                tampilanBST();
                 preOrderTraversal(historyRoot);
+                cout << "=================================================================================\n";
                 break;
             case 4:
                 // Kembali ke menu utama
@@ -220,8 +239,10 @@ int main () {
         cout << "Input tidak valid!" << endl;
         break;
     }
-
-            if(pilih2 != 3 || pilih3 != 4){ 
+            if(pilih2 == 3 || pilih3 == 4){ 
+                pil = 'y';
+                pilih2 = 0; pilih3 = 0;
+            }else {
                 do {
                     cout << YELLOW << "\nIngin mencoba menu lain? (y/n) : " << RESET;
                     cin >> pil; 
@@ -309,18 +330,20 @@ string formatHarga(int harga) {
 
     return formatted;
 }
-
+void tampilanHash() {
+    cout << "==============================================================================================" << endl;
+    cout << setfill(' ') << setiosflags(std::ios::left);
+    cout << "| No. |" << setw(31) << "Nama Produk" << '|' << setw(20) << "Harga Produk" << '|' << setw(17) << "Kode Produk" << '|' << setw(6) << "Index" << '|' << setw(8) << "Element" << '|' << endl;
+    cout << "==============================================================================================" << endl;
+}
 
 void TampilHash() {
     if (isEmptyHash()) {
-        cout << YELLOW << "Produk masih kosong, silahkan input produk terlebih dahulu!\n\n" << RESET;
+        cout << CYAN << "Produk masih kosong, silahkan input produk terlebih dahulu!\n\n" << RESET;
     } else {
         int n = 1;
-        cout << "==============================================================================================" << endl;
-        cout << setfill(' ') << setiosflags(std::ios::left);
-        cout << "| No. |" << setw(31) << "Nama Produk" << '|' << setw(20) << "Harga Produk" << '|' << setw(17) << "Kode Produk" << '|' << setw(6) << "Index" << '|' << setw(8) << "Element" << '|' << endl;
-        cout << "==============================================================================================" << endl;
-
+        cout << "Data produk yang tersedia:\n";
+        tampilanHash();
         for (int i = 0; i < kapasitas; i++) {
             if (hashTable[i] != NULL) {
                 bantu = hashTable[i];
@@ -370,21 +393,27 @@ void HapusDariHash(string kodeProduk) {
             sebelum->next = hapus->next;
         }
         
+        historyRoot = tambahKeHistory(historyRoot, hapus->hashProduk);
         string namaProduk = hapus->hashProduk.namaProduk;
         delete hapus;
-        cout << RED << "\nProduk " << namaProduk << " dengan kode " << kodeProduk << " berhasil dihapus dari tabel hash\n" << RESET;
+        cout << RED << "\nProduk \"" << namaProduk << "\" dengan kode \"" << kodeProduk << "\" berhasil dihapus dari tabel hash\n" << RESET;
     } else {
-        cout << YELLOW << "\nProduk dengan kode " << kodeProduk << " tidak ditemukan\n" << RESET;
+        cout << CYAN << "\nProduk dengan kode " << kodeProduk << " tidak ditemukan.\n" << RESET;
     }
 }   
-
+void tampilanBST() {
+    cout << "=================================================================================\n";
+    cout << setfill(' ') << setiosflags(std::ios::left);
+    cout << "| No. | " << setw(30) << "Nama Produk" << " | " << setw(20) << "Harga Produk" << "| " << setw(16) << "Kode Produk" << " |\n";
+    cout << "=================================================================================\n";
+}
 void pencarianHash() {
     system("cls");
     cout << "=============================================================\n";
     cout << "|      Pencarian Produk Berdasarkan Kode Produk [Hash]      |\n";
     cout << "=============================================================\n\n";
     if (isEmptyHash()) {
-        cout << YELLOW << "Produk masih kosong, silahkan input produk terlebih dahulu!\n\n" << RESET;
+        cout << CYAN << "Produk masih kosong, silahkan input produk terlebih dahulu!\n\n" << RESET;
     } else {
         string cariKodeProduk;
         cin.ignore();
@@ -394,10 +423,10 @@ void pencarianHash() {
         int element = 1;
         while (bantu2 != NULL) {
             if (bantu2->hashProduk.kodeProduk == cariKodeProduk) {
-                cout << "\nData Produk dengan Kode Produk " << cariKodeProduk << " ditemukan:\n";
+                cout << "\nData Produk dengan Kode Produk \"" << cariKodeProduk << "\" ditemukan:\n";
                 cout << "==============================================================================================" << endl;
                 cout << setfill(' ') << setiosflags(std::ios::left);
-                cout << "| " << setw(31) << "Nama Produk" << "| " << setw(20) << "Harga Produk" << "| " << setw(17) << "Kode Produk" << "| " << setw(6) << "Index" << "| " << setw(8) << "Element" << " |" << endl;
+                cout << "| " <<setw(31) << "Nama Produk" << '|' << setw(20) << "Harga Produk" << " | " << setw(17) << "Kode Produk" << '|' << setw(7) << "Index" << '|' << setw(10) << "Element" << '|' << endl;
                 cout << "==============================================================================================" << endl;
                 cout << "| " << setw(30) << bantu2->hashProduk.namaProduk
                      << " | Rp " << setw(16) << formatHarga(bantu2->hashProduk.hargaProduk)
@@ -410,7 +439,7 @@ void pencarianHash() {
             bantu2 = bantu2->next;
             element++; 
         }
-        cout << "\nProduk dengan kode " << cariKodeProduk << " tidak ditemukan\n";
+        cout << CYAN << "\nProduk dengan kode \"" << cariKodeProduk << "\" tidak ditemukan.\n" << RESET;
     }
 }
 
@@ -425,11 +454,8 @@ void pencarianBST(BinaryTree* node, string startName, string endName, int &i, bo
     if (node->produk.namaProduk >= startName && node->produk.namaProduk <= endName) {
         if (!found) {
             found = true; 
-            cout << YELLOW << "\n\nProduk dengan nama \"" << startName << "\" hingga \"" << endName << "\" ditemukan:\n" << RESET;
-            cout << "=================================================================================\n";
-            cout << setfill(' ') << setiosflags(std::ios::left);
-            cout << "| No. | " << setw(30) << "Nama Produk" << " | " << setw(19) << "Harga Produk" << " | " << setw(16) << "Kode Produk" << " |\n";
-            cout << "=================================================================================\n";
+            cout << "\nProduk dengan nama \"" << startName << "\" hingga \"" << endName << "\" ditemukan:\n";
+            tampilanBST();
         }
         cout << "| " << setw(4) << i << "| " << setw(30) << node->produk.namaProduk << " | Rp " << setw(16) << formatHarga(node->produk.hargaProduk) << " | " << setw(16) << node->produk.kodeProduk << " |\n";
         i++;
@@ -445,22 +471,18 @@ void urutkanProdukDescending(BinaryTree* node, int& index) {
     }
     urutkanProdukDescending(node->right, index);
     cout << "| " << setw(3) << index << " | " << setw(30) << node->produk.namaProduk << " | Rp " << setw(16) << formatHarga(node->produk.hargaProduk) << " | " << setw(16) << node->produk.kodeProduk << " |\n";
-    cout << "==================================================================================\n";
+    cout << "=================================================================================\n";
     index++;
     urutkanProdukDescending(node->left, index);
 }
 
 void tampilkanProdukDescending(BinaryTree* root) {
     if (root == NULL) {
-        cout << YELLOW << "Produk masih kosong, silahkan input produk terlebih dahulu!\n\n" << RESET;
+        cout << CYAN << "Produk masih kosong, silahkan input produk terlebih dahulu!\n\n" << RESET;
         return;
     }
     int index = 1;
-    cout << "==================================================================================\n";
-    cout << setfill(' ') << setiosflags(std::ios::left);
-    cout << "| No. | " << setw(30) << "Nama Produk" << " | " << setw(20) << "Harga Produk" << "| " << setw(16) << "Kode Produk" << " |\n";
-    cout << "==================================================================================\n";
-
+    tampilanBST();
     urutkanProdukDescending(root, index);
 }
 
@@ -477,8 +499,6 @@ History* tambahKeHistory(History* node, const tokoSerba& produk) {
     } else if (produk.namaProduk > node->historyProduk.namaProduk) {
         node->right = tambahKeHistory(node->right, produk); // Rekursif ke kanan
     }
-
-    // Kembalikan node saat ini setelah penambahan
     return node;
 }
 
@@ -486,10 +506,11 @@ void inOrderTraversal(History* node) {
     if (node == NULL) {
         return; 
     }
-    int i = 0;
+    int i = 1;
     inOrderTraversal(node->left);
-    cout << "| " << setw(3) << i++ << " | " << setw(30) << node->historyProduk.namaProduk << " | Rp " << setw(16) << formatHarga(node->historyProduk.hargaProduk) << " | " << setw(16) << node->historyProduk.kodeProduk << " |\n";
+    cout << "| " << setw(3) << i << " | " << setw(30) << node->historyProduk.namaProduk << " | Rp " << setw(16) << formatHarga(node->historyProduk.hargaProduk) << " | " << setw(16) << node->historyProduk.kodeProduk << " |\n";
     inOrderTraversal(node->right);
+    i++;
 }
 
 void postOrderTraversal(History* node) {
@@ -499,11 +520,9 @@ void postOrderTraversal(History* node) {
     postOrderTraversal(node->left);
     postOrderTraversal(node->right);
 
-    int i = 0;
-    cout << "| " << setw(3) << i++ << " | " 
-              << setw(30) << node->historyProduk.namaProduk << " | Rp " 
-              << setw(16) << formatHarga(node->historyProduk.hargaProduk) << " | " 
-              << setw(16) << node->historyProduk.kodeProduk << " |\n";
+    int i = 1;
+    cout << "| " << setw(3) << i << " | " << setw(30) << node->historyProduk.namaProduk << " | Rp " << setw(16) << formatHarga(node->historyProduk.hargaProduk) << " | " << setw(16) << node->historyProduk.kodeProduk << " |\n";
+    i++;
 }
 
 void preOrderTraversal(History* node) {
@@ -511,13 +530,14 @@ void preOrderTraversal(History* node) {
         return; 
     }
 
-   int i = 0; 
+   int i = 1; 
     cout << "| " << setw(3) << i++ << " | " 
          << setw(30) << node->historyProduk.namaProduk << " | Rp " 
          << setw(16) << formatHarga(node->historyProduk.hargaProduk) << " | " 
          << setw(16) << node->historyProduk.kodeProduk << " |\n";
 
     preOrderTraversal(node->left);
-
     preOrderTraversal(node->right);
+    i++;
+
 }
